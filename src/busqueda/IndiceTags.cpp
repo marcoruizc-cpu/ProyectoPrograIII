@@ -1,5 +1,5 @@
 #include "busqueda/IndiceTags.h"
-#include "datos/Texto.h" // normalizarTag
+#include "datos/Texto.h" // normalizarTag, normalizarTexto, tokenizar, separarLista
 
 // Agrega idPelicula a la lista de 'clave' sin repetirlo: las peliculas se
 // procesan en orden de id, asi que basta mirar el ultimo elemento (p. ej.
@@ -26,17 +26,51 @@ void IndiceTags::indexar(const std::vector<Pelicula>& peliculas) {
     }
 }
 
-std::vector<int> IndiceTags::buscarPorDirector(const std::string& nombre) const {
-    auto it = porDirector.find(normalizarTag(nombre));
-    return (it != porDirector.end()) ? it->second : std::vector<int>{};
+std::set<int> IndiceTags::buscarParcial(const std::map<std::string, std::vector<int>>& indice,
+                                        const std::vector<std::string>& palabras) {
+    std::set<int> resultado;
+    if (palabras.empty()) return resultado;
+
+    for (const auto& par : indice) {
+        const std::string& nombre = par.first; // ya normalizado: minusculas y sin tildes
+        bool contieneTodas = true;
+        for (const std::string& palabra : palabras) {
+            if (nombre.find(palabra) == std::string::npos) {
+                contieneTodas = false;
+                break;
+            }
+        }
+        if (contieneTodas) {
+            resultado.insert(par.second.begin(), par.second.end());
+        }
+    }
+    return resultado;
 }
 
-std::vector<int> IndiceTags::buscarPorActor(const std::string& nombre) const {
-    auto it = porActor.find(normalizarTag(nombre));
-    return (it != porActor.end()) ? it->second : std::vector<int>{};
+// La consulta se normaliza igual que el texto ("Spielberg" -> "spielberg",
+// "François" -> "francois") y se separa en palabras.
+std::set<int> IndiceTags::buscarPorDirector(const std::string& nombre) const {
+    return buscarParcial(porDirector, tokenizar(normalizarTexto(nombre)));
 }
 
-std::vector<int> IndiceTags::buscarPorGenero(const std::string& genero) const {
-    auto it = porGenero.find(normalizarTag(genero));
-    return (it != porGenero.end()) ? it->second : std::vector<int>{};
+std::set<int> IndiceTags::buscarPorActor(const std::string& nombre) const {
+    return buscarParcial(porActor, tokenizar(normalizarTexto(nombre)));
+}
+
+std::map<int, int> IndiceTags::buscarPorGeneros(const std::string& generos) const {
+    std::map<int, int> coincidencias; // idPelicula -> cuantos generos pedidos comparte
+    std::set<std::string> yaBuscados; // "drama, drama" cuenta una sola vez
+
+    for (const std::string& genero : separarLista(generos)) {
+        std::vector<std::string> palabras = tokenizar(normalizarTexto(genero));
+        std::string clave;
+        for (const std::string& palabra : palabras) clave += palabra + " ";
+        if (palabras.empty() || yaBuscados.count(clave)) continue;
+        yaBuscados.insert(clave);
+
+        for (int id : buscarParcial(porGenero, palabras)) {
+            coincidencias[id]++;
+        }
+    }
+    return coincidencias;
 }

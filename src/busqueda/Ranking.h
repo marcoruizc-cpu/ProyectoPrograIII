@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <set>
+#include <map>
 #include "modelo/Pelicula.h"
 #include "busqueda/IndiceBusqueda.h"
 
@@ -22,8 +24,13 @@ std::vector<int> ordenarPorImportancia(const std::string& consulta,
                                        const std::vector<Pelicula>& peliculas,
                                        const IndiceBusqueda& indice);
 
-// Orden para busquedas por tag (director, actor, genero), donde no hay texto
-// que comparar: las mas recientes primero.
-std::vector<int> ordenarPorAnio(const std::vector<int>& ids, const std::vector<Pelicula>& peliculas);
+// Orden para busquedas por director o actor, donde no hay texto que
+// comparar: las mas recientes primero.
+std::vector<int> ordenarPorAnio(const std::set<int>& ids, const std::vector<Pelicula>& peliculas);
+
+// Orden para busqueda por generos: primero las que comparten MAS generos de
+// los pedidos; si empatan, las mas recientes.
+std::vector<int> ordenarPorCoincidencias(const std::map<int, int>& coincidencias,
+                                         const std::vector<Pelicula>& peliculas);
 
 #endif

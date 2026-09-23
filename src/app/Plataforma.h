@@ -32,12 +32,16 @@ public:
     void construirIndiceTexto();
     void construirIndicesTags();
 
-    // Busquedas. Devuelven los IDs YA ORDENADOS por importancia (F10); la
-    // interfaz los muestra de 5 en 5 (F9).
+    // Busquedas. Devuelven los IDs YA ORDENADOS (F10); la interfaz los
+    // muestra de 5 en 5 (F9).
+    // - Texto: por importancia (ver Ranking).
+    // - Director / actor: nombre completo o parcial; las mas recientes primero.
+    // - Generos: uno o varios ("drama, comedy"); primero las que comparten
+    //   mas generos, luego las mas recientes.
     std::vector<int> buscarPorTexto(const std::string& consulta) const;
     std::vector<int> buscarPorDirector(const std::string& nombre) const;
     std::vector<int> buscarPorActor(const std::string& nombre) const;
-    std::vector<int> buscarPorGenero(const std::string& genero) const;
+    std::vector<int> buscarPorGeneros(const std::string& generos) const;
 
     const Pelicula& obtenerPelicula(int id) const;
 

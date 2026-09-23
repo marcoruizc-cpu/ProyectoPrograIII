@@ -1,6 +1,6 @@
 # Pruebas de aceptación — Entrega 1
 
-Salidas obtenidas con el dataset completo (`dataset/wiki_movie_plots_deduped.csv`). Compilar en modo **Release**. Validado en Linux (g++ 13, -O2) y en Windows (CLion, Release): **29/29 pruebas aprobadas**.
+Salidas obtenidas con el dataset completo (`dataset/wiki_movie_plots_deduped.csv`). Compilar en modo **Release**. Validado en Linux (g++ 13, -O2) y en Windows (CLion, Release): **35/35 pruebas aprobadas** (T30–T35: búsqueda parcial por tag y varios géneros).
 
 Notación: `menú → entrada` (cada entrada va seguida de Enter). `x` vuelve atrás.
 
@@ -40,13 +40,19 @@ Notación: `menú → entrada` (cada entrada va seguida de Enter). `x` vuelve at
 
 | ID | Entrada | Salida esperada | Qué valida | Resultado |
 |---|---|---|---|---|
-| T18 | 2 → `steven spielberg` | `de 30`; [1] The Post (2017) | Director, ordenado por año (F8) | OK |
+| T18 | 2 → `steven spielberg` | `de 31`; [1] The Post (2017) | Director, ordenado por año (F8) | OK |
 | T19 | 2 → `francois truffaut` | `de 1`: Fahrenheit 451 (1966) | Tildes en tags (François) | OK |
 | T20 | 2 → `wallace mccutcheon` | `de 4`; [1] Daniel Boone (1907) | Directores unidos con " and " | OK |
-| T21 | 3 → `tom hanks` | `de 43`; [1] The Circle (2017) | Actor | OK |
-| T22 | 4 → `comedy` | `de 5802` | Géneros combinados separados | OK |
-| T23 | 4 → `sci-fi` | `de 361`; [1] Monster Trucks (2017) | El guion no separa | OK |
+| T21 | 3 → `tom hanks` | `de 45`; [1] The Circle (2017) | Actor | OK |
+| T22 | 4 → `comedy` | `de 7266` | Géneros combinados separados; incluye "romantic comedy", "black comedy"… | OK |
+| T23 | 4 → `sci-fi` | `de 952`; [1] Monster Trucks (2017) | El guion no separa; incluye "science fiction" | OK |
 | T24 | 4 → `unknown` | `(sin coincidencias)` | "unknown" descartado | OK |
+| T30 | 2 → `spielberg` | `de 31`; [1] The Post (2017) | Nombre parcial (palabra) | OK |
+| T31 | 2 → `spiel` | `de 31`; [1] The Post (2017) | Nombre parcial (fragmento) | OK |
+| T32 | 3 → `hanks` | `de 57`; [1] The Circle (2017) | Actor parcial (incluye a otros Hanks) | OK |
+| T33 | 4 → `drama, comedy` | `de 15942`; [1] The Book of Love (2017); las que tienen **ambos** géneros van primero | Varios géneros, ordenados por cuántos comparten | OK |
+| T34 | 4 → `horror; comedy / romance` | `de 10317`; [1] Troublesome Night 18 (2003) | Separadores `;` y `/` | OK |
+| T35 | 4 → `xyz` | `(sin coincidencias)` | Género inexistente | OK |
 
 ## Robustez
 

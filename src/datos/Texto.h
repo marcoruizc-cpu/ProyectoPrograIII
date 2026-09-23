@@ -26,6 +26,12 @@ std::string normalizarTag(const std::string& texto);
 // "[Note 1]", "[citation needed]". Conserva corchetes con palabras ("[her]").
 std::string quitarMarcasDeCita(const std::string& texto);
 
+// Separa una lista de nombres o generos en elementos atomicos. Acepta como
+// separadores ',', ';', '/', '&', las rayas '–' '—' y " and "; descarta los
+// vacios y "unknown". Se usa al leer el CSV (Director, Cast, Genre) y al
+// leer los generos que escribe el usuario ("drama, comedy").
+std::vector<std::string> separarLista(const std::string& campo);
+
 // true si la palabra (ya normalizada) es un conector que no se indexa.
 bool esStopword(const std::string& palabra);
 

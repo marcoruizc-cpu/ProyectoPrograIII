@@ -139,7 +139,7 @@ void mostrarMenu() {
     cout << "\n=========================================\n";
     cout << " Plataforma de Streaming - Buscador\n";
     cout << "=========================================\n";
-    cout << "1. Buscar por titulo o sinopsis\n";
+    cout << "1. Buscar por texto(titulo o sinopsis)\n";
     cout << "2. Buscar por director\n";
     cout << "3. Buscar por actor\n";
     cout << "4. Buscar por genero\n";
@@ -205,19 +205,19 @@ int main(int argc, char** argv) {
                 navegarResultados(plataforma, plataforma.buscarPorTexto(consulta));
                 break;
             case 2:
-                cout << "Nombre del director: ";
+                cout << "Nombre del director (completo o parcial): ";
                 leerLinea(consulta);
                 navegarResultados(plataforma, plataforma.buscarPorDirector(consulta));
                 break;
             case 3:
-                cout << "Nombre del actor: ";
+                cout << "Nombre del actor (completo o parcial): ";
                 leerLinea(consulta);
                 navegarResultados(plataforma, plataforma.buscarPorActor(consulta));
                 break;
             case 4:
-                cout << "Genero: ";
+                cout << "Genero(s), separados por coma: ";
                 leerLinea(consulta);
-                navegarResultados(plataforma, plataforma.buscarPorGenero(consulta));
+                navegarResultados(plataforma, plataforma.buscarPorGeneros(consulta));
                 break;
             case 5:
                 mostrarMisListas(plataforma);

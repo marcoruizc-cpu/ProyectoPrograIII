@@ -46,7 +46,12 @@ Para cada película encontrada:
    - la sinopsis **no se recorre**: `IndiceBusqueda::contienePalabra` consulta el índice invertido con **búsqueda binaria** (`std::binary_search`). Las listas ya están ordenadas por ID porque se llenan en ese orden.
 3. `std::sort` con una **lambda** como criterio (puntaje, año, ID).
 
-Las búsquedas por tag (director, actor, género) no tienen texto que comparar, así que `ordenarPorAnio` las ordena de la más reciente a la más antigua.
+Las búsquedas por tag usan órdenes más simples:
+
+- **Director y actor** (`ordenarPorAnio`): no hay texto que comparar, así que van de la más reciente a la más antigua.
+- **Géneros** (`ordenarPorCoincidencias`): primero las que comparten **más** de los géneros pedidos ("drama, comedy" → las que tienen ambos) y, si empatan, las más recientes.
+
+La búsqueda por tag acepta el nombre completo o parcial: una palabra (`spielberg`) o un fragmento (`spiel`). Un nombre coincide si contiene todas las palabras escritas. Recorre los nombres distintos del índice (12 817 directores, 30 587 actores, 1 014 géneros), en O(K · L), y tarda como máximo unos 6 ms.
 
 ## Complejidad (S6)
 

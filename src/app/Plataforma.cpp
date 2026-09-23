@@ -31,8 +31,8 @@ std::vector<int> Plataforma::buscarPorActor(const std::string& nombre) const {
     return ordenarPorAnio(indiceTags.buscarPorActor(nombre), peliculas);
 }
 
-std::vector<int> Plataforma::buscarPorGenero(const std::string& genero) const {
-    return ordenarPorAnio(indiceTags.buscarPorGenero(genero), peliculas);
+std::vector<int> Plataforma::buscarPorGeneros(const std::string& generos) const {
+    return ordenarPorCoincidencias(indiceTags.buscarPorGeneros(generos), peliculas);
 }
 
 const Pelicula& Plataforma::obtenerPelicula(int id) const {

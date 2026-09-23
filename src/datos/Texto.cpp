@@ -179,6 +179,45 @@ std::string quitarMarcasDeCita(const std::string& texto) {
     return resultado;
 }
 
+// Reemplaza todas las apariciones de 'buscado' por 'reemplazo'.
+static std::string reemplazarTodo(std::string texto, const std::string& buscado, const std::string& reemplazo) {
+    size_t pos = texto.find(buscado);
+    while (pos != std::string::npos) {
+        texto.replace(pos, buscado.size(), reemplazo);
+        pos = texto.find(buscado, pos + reemplazo.size());
+    }
+    return texto;
+}
+
+// En el CSV los elementos vienen unidos con distintos separadores:
+//   "Victor Fleming & Theodore Reed", "Herbert Brenon and Carl Laemmle",
+//   "comedy, drama", "romantic comedy/drama", "comedy–drama", "drama; comedy".
+// Se unifican todos a ',' y luego se corta. El guion '-' NO separa, porque
+// romperia generos como "sci-fi" y nombres como "Jean-Luc Godard".
+// Se descartan los valores vacios y "unknown" (dato faltante, no un tag).
+std::vector<std::string> separarLista(const std::string& campo) {
+    std::string texto = campo;
+    texto = reemplazarTodo(texto, "\xE2\x80\x93", ","); // raya corta  –
+    texto = reemplazarTodo(texto, "\xE2\x80\x94", ","); // raya larga  —
+    texto = reemplazarTodo(texto, " and ", ",");
+    for (char& c : texto) {
+        if (c == ';' || c == '/' || c == '&') c = ',';
+    }
+
+    std::vector<std::string> partes;
+    std::istringstream stream(texto);
+    std::string parte;
+    while (std::getline(stream, parte, ',')) {
+        size_t inicio = parte.find_first_not_of(' ');
+        size_t fin = parte.find_last_not_of(' ');
+        if (inicio == std::string::npos) continue;
+        parte = parte.substr(inicio, fin - inicio + 1);
+        if (normalizarTag(parte) == "unknown") continue;
+        partes.push_back(parte);
+    }
+    return partes;
+}
+
 // Conectores y pronombres frecuentes en ingles. Un set (S5) da busqueda en
 // O(log n), igual que el ejemplo "contador de palabras sin conectores".
 static const std::set<std::string> STOPWORDS = {

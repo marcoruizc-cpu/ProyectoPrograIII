@@ -112,7 +112,6 @@ La tabla `PLEGADO_LATINO` (192 entradas) se generó con la base de datos Unicode
 ## Limitaciones conocidas
 
 - Solo se pliegan las letras latinas (U+00C0–U+017F). Otros alfabetos se conservan, pero no se transliteran.
-- La búsqueda por tag es por nombre completo: "spielberg" solo no encuentra a "Steven Spielberg".
 - Algunos títulos del CSV empiezan con un espacio (" Babel"); no se recortan.
 - En Windows, `main.cpp` configura la consola en UTF-8 (`SetConsoleOutputCP` / `SetConsoleCP`) para mostrar y leer tildes. Buscar sin tildes ("amelie") funciona siempre.
 

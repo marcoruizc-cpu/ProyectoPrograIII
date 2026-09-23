@@ -95,13 +95,33 @@ std::vector<int> ordenarPorImportancia(const std::string& consulta,
     return ordenados;
 }
 
-std::vector<int> ordenarPorAnio(const std::vector<int>& ids, const std::vector<Pelicula>& peliculas) {
-    std::vector<int> ordenados = ids;
+std::vector<int> ordenarPorAnio(const std::set<int>& ids, const std::vector<Pelicula>& peliculas) {
+    std::vector<int> ordenados(ids.begin(), ids.end());
     std::sort(ordenados.begin(), ordenados.end(), [&peliculas](int a, int b) {
         if (peliculas[a].anioEstreno != peliculas[b].anioEstreno) {
             return peliculas[a].anioEstreno > peliculas[b].anioEstreno;
         }
         return a < b;
     });
+    return ordenados;
+}
+
+std::vector<int> ordenarPorCoincidencias(const std::map<int, int>& coincidencias,
+                                         const std::vector<Pelicula>& peliculas) {
+    std::vector<std::pair<int, int>> puntuados(coincidencias.begin(), coincidencias.end()); // {id, generos}
+    std::sort(puntuados.begin(), puntuados.end(),
+              [&peliculas](const std::pair<int, int>& a, const std::pair<int, int>& b) {
+                  if (a.second != b.second) return a.second > b.second;
+                  int anioA = peliculas[a.first].anioEstreno;
+                  int anioB = peliculas[b.first].anioEstreno;
+                  if (anioA != anioB) return anioA > anioB;
+                  return a.first < b.first;
+              });
+
+    std::vector<int> ordenados;
+    ordenados.reserve(puntuados.size());
+    for (const auto& par : puntuados) {
+        ordenados.push_back(par.first);
+    }
     return ordenados;
 }

@@ -62,7 +62,7 @@ main → Plataforma → LectorCSV ─────────→ Pelicula
 | Lectura y pre-procesamiento del CSV en C++ | Hecho |
 | Árbol de búsqueda (Suffix Trie por palabra) | Hecho |
 | Búsqueda por palabra, frase y sub-palabra | Hecho |
-| Búsqueda por tag (director, actor, género) | Hecho |
+| Búsqueda por tag: director y actor (nombre completo o parcial), uno o varios géneros | Hecho |
 | Top 5 por importancia y "ver siguientes 5" | Hecho |
 | Sinopsis, Like y Ver más tarde | Hecho (en memoria) |
 | Mostrar "Ver más tarde" al iniciar (guardado en archivo) | Entrega 2 |

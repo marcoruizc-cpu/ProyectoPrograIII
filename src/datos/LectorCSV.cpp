@@ -1,5 +1,5 @@
 #include "datos/LectorCSV.h"
-#include "datos/Texto.h" // normalizarTag, quitarMarcasDeCita
+#include "datos/Texto.h" // separarLista, quitarMarcasDeCita
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -57,46 +57,6 @@ std::vector<std::vector<std::string>> leerCSV(const std::string& rutaArchivo) {
     }
 
     return filas;
-}
-
-// Reemplaza todas las apariciones de 'buscado' por 'reemplazo'.
-static std::string reemplazarTodo(std::string texto, const std::string& buscado, const std::string& reemplazo) {
-    size_t pos = texto.find(buscado);
-    while (pos != std::string::npos) {
-        texto.replace(pos, buscado.size(), reemplazo);
-        pos = texto.find(buscado, pos + reemplazo.size());
-    }
-    return texto;
-}
-
-// Separa un campo de lista (Director, Cast, Genre) en elementos atomicos.
-// En el CSV los elementos vienen unidos con distintos separadores:
-//   "Victor Fleming & Theodore Reed", "Herbert Brenon and Carl Laemmle",
-//   "comedy, drama", "romantic comedy/drama", "comedy–drama", "drama; comedy".
-// Se unifican todos a ',' y luego se corta. El guion '-' NO separa, porque
-// romperia generos como "sci-fi" y nombres como "Jean-Luc Godard".
-// Se descartan los valores vacios y "unknown" (dato faltante, no un tag).
-static std::vector<std::string> separarLista(const std::string& campo) {
-    std::string texto = campo;
-    texto = reemplazarTodo(texto, "\xE2\x80\x93", ","); // raya corta  –
-    texto = reemplazarTodo(texto, "\xE2\x80\x94", ","); // raya larga  —
-    texto = reemplazarTodo(texto, " and ", ",");
-    for (char& c : texto) {
-        if (c == ';' || c == '/' || c == '&') c = ',';
-    }
-
-    std::vector<std::string> partes;
-    std::istringstream stream(texto);
-    std::string parte;
-    while (std::getline(stream, parte, ',')) {
-        size_t inicio = parte.find_first_not_of(' ');
-        size_t fin = parte.find_last_not_of(' ');
-        if (inicio == std::string::npos) continue;
-        parte = parte.substr(inicio, fin - inicio + 1);
-        if (normalizarTag(parte) == "unknown") continue;
-        partes.push_back(parte);
-    }
-    return partes;
 }
 
 std::vector<Pelicula> construirPeliculas(std::vector<std::vector<std::string>> filas) {
