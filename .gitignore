@@ -1,0 +1,7 @@
+dataset/*
+!dataset/.gitkeep
+
+cmake-build-*/
+build/
+
+.idea/

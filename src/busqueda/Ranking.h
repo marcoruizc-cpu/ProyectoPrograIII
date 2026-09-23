@@ -1,0 +1,29 @@
+#ifndef RANKING_H
+#define RANKING_H
+
+#include <string>
+#include <vector>
+#include "modelo/Pelicula.h"
+#include "busqueda/IndiceBusqueda.h"
+
+// Algoritmo de importancia (F10). Asigna un puntaje a cada pelicula
+// encontrada y las ordena de mayor a menor. Detalle y justificacion de los
+// pesos en docs/ranking.md.
+//
+//   +100  el titulo completo es igual a la consulta        ("It" para "it")
+//   + 10  por cada termino de la consulta que contiene     (cobertura: "barco" Y "fantasma")
+//   + 30  si ese termino es una palabra COMPLETA del titulo
+//   + 15  si no, si es una SUB-PALABRA del titulo          ("bar" en "Crowbar")
+//   +  5  si no, si es una palabra completa de la sinopsis
+//
+// Empates: primero la mas reciente; luego el orden del CSV.
+std::vector<int> ordenarPorImportancia(const std::string& consulta,
+                                       const std::vector<ResultadoTermino>& resultados,
+                                       const std::vector<Pelicula>& peliculas,
+                                       const IndiceBusqueda& indice);
+
+// Orden para busquedas por tag (director, actor, genero), donde no hay texto
+// que comparar: las mas recientes primero.
+std::vector<int> ordenarPorAnio(const std::vector<int>& ids, const std::vector<Pelicula>& peliculas);
+
+#endif
