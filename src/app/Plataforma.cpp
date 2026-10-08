@@ -54,6 +54,22 @@ bool Plataforma::agregarAVerMasTarde(int id) {
     return agregarSinRepetir(verMasTarde, id);
 }
 
+// Elimina una pelicula de la lista. Devuelve false si no estaba.
+static bool quitarSiExiste(std::vector<int>& lista, int id) {
+    auto it = std::find(lista.begin(), lista.end(), id);
+    if (it == lista.end()) return false;
+    lista.erase(it);
+    return true;
+}
+
+bool Plataforma::quitarLike(int id) {
+    return quitarSiExiste(likes, id);
+}
+
+bool Plataforma::quitarDeVerMasTarde(int id) {
+    return quitarSiExiste(verMasTarde, id);
+}
+
 bool Plataforma::tieneLike(int id) const {
     return std::find(likes.begin(), likes.end(), id) != likes.end();
 }

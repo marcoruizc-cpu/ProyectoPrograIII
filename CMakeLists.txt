@@ -7,6 +7,7 @@ add_executable(ProyectoPrograIII
         src/main.cpp
         src/app/Plataforma.h
         src/app/Plataforma.cpp
+        src/app/PersistenciaListas.cpp
         src/busqueda/IndiceBusqueda.h
         src/busqueda/IndiceBusqueda.cpp
         src/busqueda/IndiceTags.h

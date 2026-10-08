@@ -48,10 +48,19 @@ public:
     // Like y Ver mas tarde (F12). Devuelven false si la pelicula ya estaba.
     bool darLike(int id);
     bool agregarAVerMasTarde(int id);
+    bool quitarLike(int id);
+    bool quitarDeVerMasTarde(int id);
     bool tieneLike(int id) const;
     bool estaEnVerMasTarde(int id) const;
     const std::vector<int>& obtenerLikes() const;
     const std::vector<int>& obtenerVerMasTarde() const;
+
+    // Persistencia de las listas del usuario. La ruta es fija respecto al
+    // proyecto, no al directorio de ejecucion de CLion.
+    // cargarListas: archivo ausente = listas nuevas/vacias; archivo invalido = false.
+    // guardarListas: escribe un temporal antes de reemplazar el archivo anterior.
+    bool cargarListas(const std::string& rutaArchivo);
+    bool guardarListas(const std::string& rutaArchivo) const;
 };
 
 #endif
