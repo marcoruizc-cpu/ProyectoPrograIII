@@ -85,3 +85,21 @@ const std::vector<int>& Plataforma::obtenerLikes() const {
 const std::vector<int>& Plataforma::obtenerVerMasTarde() const {
     return verMasTarde;
 }
+
+std::vector<Pelicula> Plataforma::obtenerTop5Peliculas(const std::vector<CandidataTop>& candidatas) const {
+    // 1. Obtenemos los 5 mejores IDs según el Heap
+    std::vector<int> topIds = Ranking::obtenerTop5Ids(candidatas);
+
+    // 2. Mapeamos los IDs a los objetos Pelicula reales usando acceso directo O(1)
+    std::vector<Pelicula> resultado;
+    resultado.reserve(topIds.size());
+
+    for (int id : topIds) {
+        // Validamos límites contra el vector de películas en memoria
+        if (static_cast<size_t>(id) < peliculas.size()) {
+            resultado.push_back(peliculas[id]);
+        }
+    }
+
+    return resultado;
+}

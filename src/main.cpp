@@ -11,7 +11,9 @@
 #endif
 #include "modelo/Pelicula.h"
 #include "app/Plataforma.h"
+#include "busqueda/Ranking.h"
 using namespace std;
+
 
 const size_t TAMANO_PAGINA = 5;
 
@@ -125,6 +127,32 @@ void navegarResultados(Plataforma& plataforma, const vector<int>& ids, const str
     }
 }
 
+void mostrarTop5Destacadas(Plataforma& plataforma, size_t totalPeliculas, const string& rutaListas) {
+    cout << "\nCalculando Top 5 con Min-Heap (O(N log 5))...\n";
+
+    vector<CandidataTop> candidatas;
+    candidatas.reserve(totalPeliculas);
+
+    for (size_t id = 0; id < totalPeliculas; ++id) {
+        int idInt = static_cast<int>(id);
+        const Pelicula& p = plataforma.obtenerPelicula(idInt);
+
+        double puntaje = static_cast<double>(p.anioEstreno);
+        if (plataforma.tieneLike(idInt)) {
+            puntaje += 500.0; // Bonificación extra si tiene Like
+        }
+
+        candidatas.push_back({idInt, puntaje});
+    }
+
+    vector<int> top5Ids = Ranking::obtenerTop5Ids(candidatas);
+
+    cout << "\n=========================================\n";
+    cout << " TOP 5 PELICULAS MEJOR EVALUADAS\n";
+    cout << "=========================================\n";
+    navegarResultados(plataforma, top5Ids, rutaListas);
+}
+
 // Permite seleccionar por numero y quitar una pelicula de la lista elegida.
 // Paginamos para que las listas extensas no saturen la consola.
 void administrarLista(Plataforma& plataforma, bool editarLikes, const string& rutaListas) {
@@ -215,8 +243,9 @@ void mostrarMenu() {
     cout << "2. Buscar por director\n";
     cout << "3. Buscar por actor\n";
     cout << "4. Buscar por genero\n";
-    cout << "5. Mis listas (Ver mas tarde y Likes)\n";
-    cout << "6. Salir\n";
+    cout << "5. Ver Top 5 destacadas (Min-Heap)\n";
+    cout << "6. Mis listas (Ver mas tarde y Likes)\n";
+    cout << "7. Salir\n";
     cout << "Elige una opcion: ";
 }
 
@@ -303,15 +332,18 @@ int main(int argc, char** argv) {
                 navegarResultados(plataforma, plataforma.buscarPorGeneros(consulta), rutaListas);
                 break;
             case 5:
-                mostrarMisListas(plataforma, rutaListas);
+                mostrarTop5Destacadas(plataforma, cantidad, rutaListas);
                 break;
             case 6:
+                mostrarMisListas(plataforma, rutaListas);
+                break;
+            case 7:
                 cout << "Hasta luego.\n";
                 break;
             default:
                 cout << "Opcion invalida.\n";
         }
-    } while (opcion != 6);
+    } while (opcion != 7);
 
     return 0;
 }

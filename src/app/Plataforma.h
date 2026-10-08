@@ -6,6 +6,7 @@
 #include "modelo/Pelicula.h"
 #include "busqueda/IndiceBusqueda.h"
 #include "busqueda/IndiceTags.h"
+#include "busqueda/Ranking.h"
 
 // Nucleo de la plataforma de streaming: es duena del catalogo de peliculas,
 // de los indices y de las listas del usuario, y expone las operaciones del
@@ -54,6 +55,7 @@ public:
     bool estaEnVerMasTarde(int id) const;
     const std::vector<int>& obtenerLikes() const;
     const std::vector<int>& obtenerVerMasTarde() const;
+    std::vector<Pelicula> obtenerTop5Peliculas(const std::vector<CandidataTop>& candidatas) const;
 
     // Persistencia de las listas del usuario. La ruta es fija respecto al
     // proyecto, no al directorio de ejecucion de CLion.

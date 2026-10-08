@@ -1,6 +1,8 @@
 #include "busqueda/Ranking.h"
 #include <algorithm> // std::sort
 #include <set>
+#include <functional>
+#include <queue>
 #include <utility>   // std::pair
 #include "datos/Texto.h"   // normalizarTexto, tokenizar
 
@@ -124,4 +126,33 @@ std::vector<int> ordenarPorCoincidencias(const std::map<int, int>& coincidencias
         ordenados.push_back(par.first);
     }
     return ordenados;
+}
+
+std::vector<int> Ranking::obtenerTop5Ids(const std::vector<CandidataTop>& candidatas) {
+    // Min-Heap de tamaño máximo 5 usando std::greater
+    std::priority_queue<CandidataTop, std::vector<CandidataTop>, std::greater<CandidataTop>> minHeap;
+
+    for (const auto& item : candidatas) {
+        if (item.id < 0) continue; // Descarte de IDs inválidos
+
+        if (minHeap.size() < 5) {
+            minHeap.push(item);
+        } else if (item.puntaje > minHeap.top().puntaje) {
+            minHeap.pop(); // Sacamos al menor del Top 5 actual
+            minHeap.push(item); // Insertamos la nueva película con mayor puntaje
+        }
+    }
+
+    // Extraemos los elementos (saldrán de menor a mayor puntaje)
+    std::vector<int> idsTop5;
+    idsTop5.reserve(minHeap.size());
+    while (!minHeap.empty()) {
+        idsTop5.push_back(minHeap.top().id);
+        minHeap.pop();
+    }
+
+    // Invertimos el vector para que el puesto #1 (mayor puntaje) quede al inicio
+    std::reverse(idsTop5.begin(), idsTop5.end());
+
+    return idsTop5;
 }

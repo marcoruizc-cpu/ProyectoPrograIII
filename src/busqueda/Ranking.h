@@ -33,4 +33,20 @@ std::vector<int> ordenarPorAnio(const std::set<int>& ids, const std::vector<Peli
 std::vector<int> ordenarPorCoincidencias(const std::map<int, int>& coincidencias,
                                          const std::vector<Pelicula>& peliculas);
 
+struct CandidataTop {
+    int id;
+    double puntaje;
+
+    // Sobrecarga de '>' para construir el Min-Heap en std::priority_queue
+    bool operator>(const CandidataTop& otra) const {
+        return puntaje > otra.puntaje;
+    }
+};
+
+class Ranking {
+public:
+    // Procesa N candidatas y retorna solo los IDs del Top 5 en O(N log 5)
+    static std::vector<int> obtenerTop5Ids(const std::vector<CandidataTop>& candidatas);
+};
+
 #endif
